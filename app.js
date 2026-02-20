@@ -8,13 +8,20 @@ const presets = {
 const els = {
   preset: document.getElementById("preset"),
   L: document.getElementById("L"),
+  LVal: document.getElementById("LVal"),
   r: document.getElementById("r"),
+  rVal: document.getElementById("rVal"),
   noise: document.getElementById("noise"),
+  noiseVal: document.getElementById("noiseVal"),
   nP: document.getElementById("nP"),
+  nPVal: document.getElementById("nPVal"),
   vel: document.getElementById("vel"),
+  velVal: document.getElementById("velVal"),
   tI: document.getElementById("tI"),
+  tIVal: document.getElementById("tIVal"),
   apply: document.getElementById("apply"),
   toggle: document.getElementById("toggle"),
+  autoLoop: document.getElementById("autoLoop"),
   status: document.getElementById("status"),
   canvas: document.getElementById("simCanvas"),
 };
@@ -112,20 +119,39 @@ function drawSimulation() {
     ctx.stroke();
   }
 
-  els.status.textContent = running
-    ? `Running • step ${step}/${tI}`
-    : `Paused • step ${step}/${tI}`;
+  if (!running) {
+    els.status.textContent = `Paused • step ${step}/${tI}`;
+    return;
+  }
+
+  if (step >= tI) {
+    els.status.textContent = els.autoLoop.checked
+      ? `Running (loop) • step ${step}/${tI}`
+      : `Complete • step ${step}/${tI}`;
+    return;
+  }
+
+  els.status.textContent = `Running • step ${step}/${tI}`;
 }
 
 function readConfigFromInputs() {
   return {
-    L: Number(els.L.value),
+    L: Math.round(Number(els.L.value)),
     r: Number(els.r.value),
     noise: Number(els.noise.value),
-    nP: Number(els.nP.value),
+    nP: Math.round(Number(els.nP.value)),
     vel: Number(els.vel.value),
-    tI: Number(els.tI.value),
+    tI: Math.round(Number(els.tI.value)),
   };
+}
+
+function updateValueDisplays() {
+  els.LVal.textContent = `${Math.round(Number(els.L.value))}`;
+  els.rVal.textContent = `${Number(els.r.value).toFixed(1)}`;
+  els.noiseVal.textContent = `${Number(els.noise.value).toFixed(1)}`;
+  els.nPVal.textContent = `${Math.round(Number(els.nP.value))}`;
+  els.velVal.textContent = `${Number(els.vel.value).toFixed(3)}`;
+  els.tIVal.textContent = `${Math.round(Number(els.tI.value))}`;
 }
 
 function setInputs(config) {
@@ -135,15 +161,27 @@ function setInputs(config) {
   els.nP.value = config.nP;
   els.vel.value = config.vel;
   els.tI.value = config.tI;
+  updateValueDisplays();
 }
 
 function loop() {
-  if (running && sim && sim.step < sim.tI) {
-    updateSimulation();
+  if (running && sim) {
+    if (sim.step < sim.tI) {
+      updateSimulation();
+    } else if (els.autoLoop.checked) {
+      initFromConfig(readConfigFromInputs());
+    }
   }
   drawSimulation();
   requestAnimationFrame(loop);
 }
+
+[els.L, els.r, els.noise, els.nP, els.vel, els.tI].forEach((inputEl) => {
+  inputEl.addEventListener("input", () => {
+    updateValueDisplays();
+    els.preset.value = "CUSTOM";
+  });
+});
 
 els.preset.addEventListener("change", () => {
   const p = els.preset.value;
@@ -158,6 +196,7 @@ els.apply.addEventListener("click", () => {
   initFromConfig(config);
   running = true;
   els.toggle.textContent = "Pause";
+  updateValueDisplays();
 });
 
 els.toggle.addEventListener("click", () => {

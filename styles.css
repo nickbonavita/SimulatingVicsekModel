@@ -46,6 +46,16 @@ header p {
   gap: 10px;
 }
 
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+output {
+  color: #b8bfcc;
+}
+
 label {
   display: flex;
   flex-direction: column;
@@ -63,10 +73,22 @@ button {
   padding: 8px;
 }
 
+input[type="range"] {
+  padding: 0;
+}
+
 .actions {
   margin-top: 12px;
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 button {
