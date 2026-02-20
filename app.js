@@ -172,6 +172,15 @@ function restartSimulationFromControls() {
   initFromConfig(readConfigFromInputs());
 }
 
+function applyDefaultStartupState() {
+  els.preset.value = "B";
+  els.autoLoop.checked = true;
+  setInputs(presets.B);
+  initFromConfig(presets.B);
+  running = true;
+  els.toggle.textContent = "Pause";
+}
+
 function loop() {
   if (running && sim) {
     if (!isComplete()) {
@@ -215,7 +224,9 @@ els.toggle.addEventListener("click", () => {
   els.toggle.textContent = running ? "Pause" : "Resume";
 });
 
-els.preset.value = "B";
-setInputs(presets.B);
-initFromConfig(presets.B);
+window.addEventListener("pageshow", () => {
+  applyDefaultStartupState();
+});
+
+applyDefaultStartupState();
 loop();
