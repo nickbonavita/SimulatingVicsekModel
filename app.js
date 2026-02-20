@@ -99,7 +99,7 @@ function drawSimulation() {
   ctx.strokeStyle = "#73a3ff";
   ctx.lineWidth = 1;
 
-  const arrow = Math.max(2, sizePx / (L * 4));
+  const arrow = Math.max(0.33, sizePx / (L * 24));
   for (let i = 0; i < nP; i += 1) {
     const px = (x[i] / L) * sizePx;
     const py = (y[i] / L) * sizePx;
