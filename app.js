@@ -215,6 +215,7 @@ els.toggle.addEventListener("click", () => {
   els.toggle.textContent = running ? "Pause" : "Resume";
 });
 
-setInputs(presets.A);
-initFromConfig(presets.A);
+els.preset.value = "B";
+setInputs(presets.B);
+initFromConfig(presets.B);
 loop();
