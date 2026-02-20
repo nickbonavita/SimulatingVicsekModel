@@ -164,12 +164,23 @@ function setInputs(config) {
   updateValueDisplays();
 }
 
+function isComplete() {
+  return sim && sim.step >= sim.tI;
+}
+
+function restartSimulationFromControls() {
+  initFromConfig(readConfigFromInputs());
+}
+
 function loop() {
   if (running && sim) {
-    if (sim.step < sim.tI) {
+    if (!isComplete()) {
       updateSimulation();
-    } else if (els.autoLoop.checked) {
-      initFromConfig(readConfigFromInputs());
+    }
+
+    if (isComplete() && els.autoLoop.checked) {
+      restartSimulationFromControls();
+      updateSimulation();
     }
   }
   drawSimulation();
