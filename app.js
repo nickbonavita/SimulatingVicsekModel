@@ -225,8 +225,13 @@ els.toggle.addEventListener("click", () => {
 });
 
 window.addEventListener("pageshow", () => {
-  applyDefaultStartupState();
+  setTimeout(applyDefaultStartupState, 0);
+});
+
+window.addEventListener("load", () => {
+  setTimeout(applyDefaultStartupState, 0);
 });
 
 applyDefaultStartupState();
+loop();
 loop();
